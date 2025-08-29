@@ -3,38 +3,22 @@
   "templates": [
     {
       "type": "stack",
-      "title": "Odoo Instance",
-      "description": "Crea una instancia de Odoo 18 con dominio y DB inicial",
-      "env": [
-        { "name": "INSTANCE", "label": "Nombre interno", "default": "cliente1" },
-        { "name": "DOMAIN", "label": "Dominio/subdominio", "default": "cliente1.midominio.com" },
-        { "name": "LETSENCRYPT_EMAIL", "label": "Correo para SSL", "default": "admin@midominio.com" }
-      ],
+      "title": "Nginx Hello",
+      "description": "Ejemplo mínimo para probar catálogos en Portainer",
+      "note": "Este stack levanta un contenedor Nginx accesible en el puerto 8085",
+      "categories": ["test", "nginx"],
+      "platform": "linux",
+      "logo": "https://www.nginx.com/wp-content/uploads/2018/08/NGINX-logo-rgb-large.png",
       "stack": {
         "version": "3.8",
         "services": {
-          "{{INSTANCE}}": {
-            "image": "odoo:18.0",
-            "container_name": "{{INSTANCE}}-odoo",
-            "restart": "always",
-            "environment": [
-              "VIRTUAL_HOST={{DOMAIN}}",
-              "LETSENCRYPT_HOST={{DOMAIN}}",
-              "LETSENCRYPT_EMAIL={{LETSENCRYPT_EMAIL}}",
-              "VIRTUAL_PORT=8069"
-            ],
-            "volumes": [
-              "{{INSTANCE}}-data:/var/lib/odoo",
-              "./instancias/{{INSTANCE}}/addons:/mnt/extra-addons",
-              "/odoo-docker/scripts/odoo.conf.base:/etc/odoo/odoo.conf",
-              "/odoo-docker/scripts/init_odoo.sh:/etc/odoo/init_odoo.sh"
-            ],
-            "networks": ["proxy-tier"],
-            "command": ["/bin/bash", "/etc/odoo/init_odoo.sh"]
+          "hello-nginx": {
+            "image": "nginx:alpine",
+            "container_name": "hello-nginx",
+            "ports": ["8085:80"],
+            "restart": "always"
           }
-        },
-        "volumes": { "{{INSTANCE}}-data": {} },
-        "networks": { "proxy-tier": { "external": true } }
+        }
       }
     }
   ]
