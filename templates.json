@@ -4,27 +4,11 @@
     {
       "type": "stack",
       "title": "Odoo Instance",
-      "description": "Crea una instancia de Odoo 18 con dominio y base de datos inicial",
-      "note": "Cada despliegue crea un contenedor Odoo + DB inicial en Postgres con SSL automático.",
-      "categories": ["Odoo", "ERP"],
-      "platform": "linux",
-      "logo": "https://www.odoo.com/web/image/website/1/favicon",
+      "description": "Crea una instancia de Odoo 18 con dominio y DB inicial",
       "env": [
-        {
-          "name": "INSTANCE",
-          "label": "Nombre interno de la instancia (ej: cliente1)",
-          "default": "cliente1"
-        },
-        {
-          "name": "DOMAIN",
-          "label": "Dominio/subdominio (ej: cliente1.midominio.com)",
-          "default": "cliente1.midominio.com"
-        },
-        {
-          "name": "LETSENCRYPT_EMAIL",
-          "label": "Correo para Let's Encrypt",
-          "default": "admin@midominio.com"
-        }
+        { "name": "INSTANCE", "label": "Nombre interno", "default": "cliente1" },
+        { "name": "DOMAIN", "label": "Dominio/subdominio", "default": "cliente1.midominio.com" },
+        { "name": "LETSENCRYPT_EMAIL", "label": "Correo para SSL", "default": "admin@midominio.com" }
       ],
       "stack": {
         "version": "3.8",
@@ -42,7 +26,6 @@
             "volumes": [
               "{{INSTANCE}}-data:/var/lib/odoo",
               "./instancias/{{INSTANCE}}/addons:/mnt/extra-addons",
-              "./instancias/{{INSTANCE}}/addons_extra:/mnt/extra-addons-extra",
               "/odoo-docker/scripts/odoo.conf.base:/etc/odoo/odoo.conf",
               "/odoo-docker/scripts/init_odoo.sh:/etc/odoo/init_odoo.sh"
             ],
@@ -50,12 +33,8 @@
             "command": ["/bin/bash", "/etc/odoo/init_odoo.sh"]
           }
         },
-        "volumes": {
-          "{{INSTANCE}}-data": {}
-        },
-        "networks": {
-          "proxy-tier": { "external": true }
-        }
+        "volumes": { "{{INSTANCE}}-data": {} },
+        "networks": { "proxy-tier": { "external": true } }
       }
     }
   ]
